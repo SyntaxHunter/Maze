@@ -1,52 +1,44 @@
 package org.jointheleague.mazegenerator.da;
-import java.awt.Dimension;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Random;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+public class Maze {
 
-public class Maze extends JPanel implements Runnable{
-	
-	static final int ROWS = 4;
-	static final int COLUMNS = 6;
+	private final int rows;
+	private final int columns;
 	
 	ArrayList<Edge> edges = new ArrayList<Edge>();
 	private Node[][] nodes;
 	private Edge[][] horizontalEdges;
 	private Edge[][] verticalEdges;
-	
-	public static void main(String[] args) {
-		Maze m = new Maze();
-		SwingUtilities.invokeLater(m);
+
+	// public static void main(String[] args) {
+	// Maze m = new Maze();
+	// SwingUtilities.invokeLater(m);
+	// }
+
+	public Maze(int rows, int columns) {
+		this.rows = rows;
+		this.columns = columns;
+		initialize();
 	}
-	
-	private void setUpGUI() {
-		JFrame frame = new JFrame();
-		frame.add(this);
-		int cellSize = 100;
-		Dimension d = new Dimension(cellSize*COLUMNS, cellSize*ROWS);
-		this.setPreferredSize(d);
-		frame.pack();
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}
-	
+
 	public void initialize() {
 		// Initialize nodes and edges
-		nodes = new Node[ROWS][COLUMNS];
-		horizontalEdges = new Edge[ROWS][COLUMNS - 1];
-		verticalEdges = new Edge[ROWS - 1][COLUMNS];
-		
+		nodes = new Node[rows][columns];
+		horizontalEdges = new Edge[rows][columns - 1];
+		verticalEdges = new Edge[rows - 1][columns];
+
 		// Create nodes
 		for (int i = 0; i < nodes.length; i++) {
 			for (int j = 0; j < nodes[i].length; j++) {
-				nodes[i][j] = new Node();
+				nodes[i][j] = new Node(i,j);
 			}
 		}
-		
+
 		Random rand = new Random();
 		// Create and set costs of horizontal edges
 		for (int i = 0; i < horizontalEdges.length; i++) {
@@ -57,7 +49,7 @@ public class Maze extends JPanel implements Runnable{
 				nodes[i][j + 1].addEdge(e);
 			}
 		}
-		
+
 		// Create and set costs of vertical edges
 		for (int i = 0; i < verticalEdges.length; i++) {
 			for (int j = 0; j < verticalEdges[i].length; j++) {
@@ -68,8 +60,8 @@ public class Maze extends JPanel implements Runnable{
 			}
 		}
 	}
-	
-	public void generateMST() {
+
+	public List<Edge> generateMST() {
 		PriorityQueue<Edge> queue = new PriorityQueue<Edge>();
 		for (Edge e : nodes[0][0].getAdjacentEdges()) {
 			queue.add(e);
@@ -80,9 +72,8 @@ public class Maze extends JPanel implements Runnable{
 			if (currentEdge.getNode1().isConnected() && currentEdge.getNode2().isConnected()) {
 				continue;
 			}
-			final Node currentNode = currentEdge.getNode1().isConnected()
-									? currentEdge.getNode2()
-									: currentEdge.getNode1();
+			final Node currentNode = currentEdge.getNode1().isConnected() ? currentEdge.getNode2()
+					: currentEdge.getNode1();
 			currentNode.setConnected(true);
 			edges.add(currentEdge);
 			for (Edge e : currentNode.getAdjacentEdges()) {
@@ -91,8 +82,9 @@ public class Maze extends JPanel implements Runnable{
 				}
 			}
 		}
+		return edges;
 	}
-	
+
 	public Edge[][] getHorizontalEdges() {
 		return horizontalEdges;
 	}
@@ -105,8 +97,11 @@ public class Maze extends JPanel implements Runnable{
 		return nodes;
 	}
 
-	@Override
-	public void run() {
-		setUpGUI();
+	public int getRows() {
+		return rows;
+	}
+
+	public int getColumns() {
+		return columns;
 	}
 }

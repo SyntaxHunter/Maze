@@ -7,8 +7,21 @@ public class Node {
 	private boolean connected;
 	private ArrayList<Edge> edges;
 	
-	public Node() {
+	private final int row;
+	private final int col;
+	
+	public Node(int row, int col) {
 		edges = new ArrayList<Edge>();
+		this.row = row;
+		this.col = col;
+	}
+	
+	public int getRow() {
+		return row;
+	}
+	
+	public int getCol() {
+		return col;
 	}
 	
 	public void addEdge(Edge e) {

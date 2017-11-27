@@ -16,27 +16,27 @@ public class MazeTest {
 	
 	@Before
 	public void before() {
-		maze = new Maze();
+		maze = new Maze(4,6);
 		maze.initialize();
 	}
 
 	@Test
 	public void testInitializeHorizontal() {
-		assertTrue("Number of rows should be greater than 0", Maze.ROWS > 0);
-		assertTrue(Maze.COLUMNS > 0);
-		assertEquals(Maze.ROWS, maze.getHorizontalEdges().length);
+		assertTrue("Number of rows should be greater than 0", maze.getRows() > 0);
+		assertTrue(maze.getColumns() > 0);
+		assertEquals(maze.getRows(), maze.getHorizontalEdges().length);
 		for (Edge[] row: maze.getHorizontalEdges()) {
-			assertEquals(Maze.COLUMNS - 1, row.length);
+			assertEquals(maze.getColumns() - 1, row.length);
 		}
 	}
 	
 	@Test
 	public void testInitalizeVertical() {
-		assertTrue(Maze.ROWS > 0);
-		assertTrue(Maze.COLUMNS > 0);
-		assertEquals(Maze.ROWS - 1, maze.getVerticalEdges().length);
+		assertTrue(maze.getRows() > 0);
+		assertTrue(maze.getColumns() > 0);
+		assertEquals(maze.getRows() - 1, maze.getVerticalEdges().length);
 		for (Edge[] row: maze.getVerticalEdges()) {
-			assertEquals(Maze.COLUMNS, row.length);
+			assertEquals(maze.getColumns(), row.length);
 		}
 	}
 	
@@ -58,7 +58,7 @@ public class MazeTest {
 	@Test
 	public void testGenerateMST() {
 		maze.generateMST();
-		assertEquals(Maze.ROWS * Maze.COLUMNS - 1, maze.edges.size());
+		assertEquals(maze.getRows() * maze.getColumns() - 1, maze.edges.size());
 	}
 
 }
